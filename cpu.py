@@ -25,12 +25,15 @@ class Cpu:
         """memory of max size, set to 0"""
         self.memory = [] * MEMORY_SIZE
 
-
+        """set the cycles to 0"""
+        self.cycles = 0
     
+    def LXI_B(self):
+        self.cycles += 3 #is this 3 or 10 cycles, resume from here
+
     def read_instruction(self, instruction):
-        if
+        if(instruction == '00'):
+            pass
 
-
-
-
-
+        if(instruction == '01'):
+            LXI_B()
