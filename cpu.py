@@ -24,7 +24,7 @@ class Cpu:
         self.memory = [] * 65536
 
 
-    """"The game will be loaded into memory, so retrieve the next two bytes from the ROM?"""
+    """"The game will be loaded into memory, so retrieve the next byte from the ROM?"""
     def fetch_byte(self):
         return #incomplete function
 
