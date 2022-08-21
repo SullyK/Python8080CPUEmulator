@@ -20,23 +20,42 @@ class Cpu:
         self.CY = False
         self.AC = False
 
+        """program counter"""
+        self.PC = 0
         """memory of max size, set to 0"""
         self.memory = [] * 65536
 
+    #--------------------------------------------------#
 
-    """"The game will be loaded into memory, so retrieve the next byte from the ROM?"""
+    """"The game will be loaded into memory, so retrieve the next two bytes from the ROM?"""
     def fetch_byte(self):
         return #incomplete function
 
     """set register BC within this function"""
-    def set_register_BC(self, high_end, low_end):
-        self.BC = #how would they go into this? Pick up from here.
+    def set_register_BC(self, high_byte, low_byte):
+        self.BC = high_byte << 8 | low_byte # (high_byte << 8 + low_byte) works too
+        self.PC += 3 
         return #incomplete function
     
     """set register DE within this function"""
-    def set_register_DE(self, high_end, low_end):
+    def set_register_DE(self, high_byte, low_byte):
+        self.DE = high_byte << 8 | low_byte
+        self.PC += 3 
         return #incomplete function
 
+    """set register HL within this function"""
+    def set_register_HL(self, high_byte, low_byte):
+        self.HL = high_byte << 8 | low_byte
+        self.PC += 3 
+        return #incomplete function
+
+    """set SP within this function"""
+    def set_register_SP(self, high_byte, low_byte):
+        self.SP = high_byte << 8 | low_byte
+        self.PC += 3 
+        return #incomplete function
+
+    #--------------------------------------------------#
 
     """write 16 bit number to given register pair """
     def LXI_B(self):
@@ -51,7 +70,19 @@ class Cpu:
         self.set_register_DE(byte_two,byte_three)
         return
 
+    def LXI_H(self):
+        byte_two = self.fetch_byte()
+        byte_three = self.fetch_byte()
+        self.set_register_HL(byte_two,byte_three)
+        return
+    
+    def LXI_SP(self):
+        byte_two = self.fetch_byte()
+        byte_three = self.fetch_byte()
+        self.set_register_SP(byte_two,byte_three)
+        return
 
+    #--------------------------------------------------#
 
     def read_instruction(self, instruction): 
         #for now I kept it as instruction (above), need to figure out where it's read from, memory?
