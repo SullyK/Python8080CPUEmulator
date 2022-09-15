@@ -31,9 +31,9 @@ with open("invaders", "rb") as b_file:
     data = bytearray(b_file.read())
 cpu.memory = data
 
-assert cpu.memory[0] = 0x00
-assert hex(cpu.memory[9]) == 0xc5
-assert hex(cpu.memory[len(data)-1]) == 0x00
+assert cpu.memory[0] == 0x00
+assert cpu.memory[9] == 0xc5
+assert cpu.memory[len(data)-1] == 0x00
 
 #--------------------------------------------------#
 
