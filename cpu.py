@@ -28,8 +28,7 @@ class Cpu:
 cpu = Cpu()
 # step 1. load spaceinvaders into memory
 with open("invaders", "rb") as b_file:
-    data = bytearray(b_file.read())
-cpu.memory = data
+    cpu.memory = bytearray(b_file.read())
 
 assert cpu.memory[0] == 0x00
 assert cpu.memory[9] == 0xc5
