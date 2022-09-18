@@ -106,7 +106,6 @@ class Cpu:
         self.PC = 0
   
     def read_instruction(self): 
-    #for now I kept it as instruction (above), need to figure out where it's read from, memory?
         op_code = self.memory[self.PC]
         match op_code:
             case 0x00:
