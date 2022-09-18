@@ -35,7 +35,7 @@ class Cpu:
         high_byte = self.memory[self.PC]
         low_byte = self.memory[self.PC+1]
         self.PC += 2 
-        data = high_byte << 8 | low_byte
+        data = high_byte << 8 | low_byte  #(high_byte << 8 + low_byte) works too
         return data
 
     #MEMORY IS NOT RESET FOR TESTING PURPOSES
@@ -57,8 +57,7 @@ class Cpu:
         self.CY = False
         self.AC = False
         self.PC = 0
-
-    
+  
 #--------------------------------------------------#
 
 # testing
@@ -79,39 +78,35 @@ cpu.test_reset()
 data = cpu.fetch_two_bytes()
 assert data == 0x00
 data = cpu.fetch_two_bytes()
-assert data == 0x00
 data = cpu.fetch_two_bytes()
-assert data == 0x00
+assert data == 0xd418
 data = cpu.fetch_two_bytes()
-assert data == 0x00
-
-
+data = cpu.fetch_two_bytes()
+assert data == 0xf5c5
+cpu.test_reset()
 
 #--------------------------------------------------#
 
-#set register BC within this function
-def set_register_BC(self, high_byte, low_byte):
-    self.BC = high_byte << 8 | low_byte # (high_byte << 8 + low_byte) works too
+#setting the 16 bit registers 
+def set_register_BC(self, data):
+    self.BC = data 
     self.PC += 3 
-    return #incomplete function
+    return 
 
-#set register DE within this function
-def set_register_DE(self, high_byte, low_byte):
-    self.DE = high_byte << 8 | low_byte
+def set_register_DE(self,data):
+    self.DE = data
     self.PC += 3 
-    return #incomplete function
+    return 
 
-#set register HL within this function
-def set_register_HL(self, high_byte, low_byte):
-    self.HL = high_byte << 8 | low_byte
+def set_register_HL(self, data):
+    self.HL = data
     self.PC += 3 
-    return #incomplete function
+    return 
 
-#set SP within this function
-def set_register_SP(self, high_byte, low_byte):
-    self.SP = high_byte << 8 | low_byte
+def set_register_SP(self, data):
+    self.SP = data
     self.PC += 3 
-    return #incomplete function
+    return 
 
 #--------------------------------------------------#
 
