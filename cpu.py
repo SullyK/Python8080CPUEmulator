@@ -38,6 +38,53 @@ class Cpu:
         data = high_byte << 8 | low_byte  #(high_byte << 8 + low_byte) works too
         return data
 
+    #--------------------------------------------------#
+
+    #setting the 16 bit registers 
+    def set_register_BC(self, data):
+        self.BC = data 
+        return 
+
+    def set_register_DE(self,data):
+        self.DE = data
+        return 
+
+    def set_register_HL(self, data):
+        self.HL = data
+        return 
+
+    def set_register_SP(self, data):
+        self.SP = data
+        return 
+
+    #--------------------------------------------------#
+
+    #write 16 bit number to given register pair
+    def LXI_B(self):
+        data_16 = self.fetch_two_bytes()
+        self.set_register_BC(data_16)
+        self.PC += 1
+        return
+
+    def LXI_D(self):
+        data_16 = self.fetch_two_bytes()
+        self.set_register_DE(data_16)
+        self.PC += 1
+        return
+
+    def LXI_H(self):
+        data_16 = self.fetch_two_bytes()
+        self.set_register_HL(data_16)
+        self.PC += 1
+        return
+
+    def LXI_SP(self):
+        data_16 = self.fetch_two_bytes()
+        self.set_register_SP(data_16)
+        self.PC += 1                    #@@@ check whether I did the addition of the PC properly.
+        return
+    #--------------------------------------------------#
+
     #MEMORY IS NOT RESET FOR TESTING PURPOSES
     def test_reset(self):
         self.A = 0
@@ -58,6 +105,15 @@ class Cpu:
         self.AC = False
         self.PC = 0
   
+    def read_instruction(self): 
+    #for now I kept it as instruction (above), need to figure out where it's read from, memory?
+        op_code = self.memory[self.PC]
+        match op_code:
+            case 0x00:
+                return
+            case 0x01:
+                self.LXI_B()
+
 #--------------------------------------------------#
 
 # testing
@@ -85,58 +141,3 @@ data = cpu.fetch_two_bytes()
 assert data == 0xf5c5
 cpu.test_reset()
 
-#--------------------------------------------------#
-
-#setting the 16 bit registers 
-def set_register_BC(self, data):
-    self.BC = data 
-    return 
-
-def set_register_DE(self,data):
-    self.DE = data
-    return 
-
-def set_register_HL(self, data):
-    self.HL = data
-    return 
-
-def set_register_SP(self, data):
-    self.SP = data
-    return 
-
-#--------------------------------------------------#
-
-#write 16 bit number to given register pair
-def LXI_B(self, data_16):
-    byte_two = self.fetch_byte()
-    byte_three = self.fetch_byte()
-    self.set_register_BC(byte_two,byte_three)
-    return
-
-def LXI_D(self, data_16):
-    byte_two = self.fetch_byte()
-    byte_three = self.fetch_byte()
-    self.set_register_DE(byte_two,byte_three)
-    return
-
-def LXI_H(self, data_16):
-    byte_two = self.fetch_byte()
-    byte_three = self.fetch_byte()
-    self.set_register_HL(byte_two,byte_three)
-    return
-
-def LXI_SP(self, data_16):
-    byte_two = self.fetch_byte()
-    byte_three = self.fetch_byte()
-    self.set_register_SP(byte_two,byte_three)
-    return
-
-#--------------------------------------------------#
-
-def read_instruction(self, instruction): 
-    #for now I kept it as instruction (above), need to figure out where it's read from, memory?
-    if(instruction == '00'):
-        pass
-
-    if(instruction == '01'):
-        self.LXI_B()
