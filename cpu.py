@@ -90,46 +90,42 @@ cpu.test_reset()
 #setting the 16 bit registers 
 def set_register_BC(self, data):
     self.BC = data 
-    self.PC += 3 
     return 
 
 def set_register_DE(self,data):
     self.DE = data
-    self.PC += 3 
     return 
 
 def set_register_HL(self, data):
     self.HL = data
-    self.PC += 3 
     return 
 
 def set_register_SP(self, data):
     self.SP = data
-    self.PC += 3 
     return 
 
 #--------------------------------------------------#
 
 #write 16 bit number to given register pair
-def LXI_B(self):
+def LXI_B(self, data_16):
     byte_two = self.fetch_byte()
     byte_three = self.fetch_byte()
     self.set_register_BC(byte_two,byte_three)
     return
 
-def LXI_D(self):
+def LXI_D(self, data_16):
     byte_two = self.fetch_byte()
     byte_three = self.fetch_byte()
     self.set_register_DE(byte_two,byte_three)
     return
 
-def LXI_H(self):
+def LXI_H(self, data_16):
     byte_two = self.fetch_byte()
     byte_three = self.fetch_byte()
     self.set_register_HL(byte_two,byte_three)
     return
 
-def LXI_SP(self):
+def LXI_SP(self, data_16):
     byte_two = self.fetch_byte()
     byte_three = self.fetch_byte()
     self.set_register_SP(byte_two,byte_three)
