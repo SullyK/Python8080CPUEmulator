@@ -23,7 +23,7 @@ class Cpu:
         """program counter""" 
         self.PC = 0
         """memory is a list"""
-        self.memory = 0
+        self.memory = []
 
     #The game will be loaded into memory, so retrieve the next byte
     def fetch_byte(self):
@@ -32,10 +32,11 @@ class Cpu:
         return byte
     
     def fetch_two_bytes(self):
-        high_byte = self.memory[self.PC]
-        low_byte = self.memory[self.PC+1]
+        low_byte = self.memory[self.PC] # The CPU is low endian so we start with the low byte
+        high_byte = self.memory[self.PC+1]
         self.PC += 2 
         data = high_byte << 8 | low_byte  #(high_byte << 8 + low_byte) works too
+        # print(hex(data)) #debugging
         return data
 
     #--------------------------------------------------#
@@ -134,9 +135,9 @@ data = cpu.fetch_two_bytes()
 assert data == 0x00
 data = cpu.fetch_two_bytes()
 data = cpu.fetch_two_bytes()
-assert data == 0xd418
+assert data == 0x18d4
 data = cpu.fetch_two_bytes()
 data = cpu.fetch_two_bytes()
-assert data == 0xf5c5
+assert data == 0xc5f5
 cpu.test_reset()
 
