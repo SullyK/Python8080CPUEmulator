@@ -90,6 +90,10 @@ class Cpu:
         addr = self.BC
         self.memory[addr] = self.A & 0xFF    
         return
+
+    def INX_B(self):
+        self.BC = (self.BC + 1) & 0xFF
+        return 
     
 
     #--------------------------------------------------#
@@ -125,7 +129,9 @@ class Cpu:
             case 0x02:
                 self.STAX_B()
                 return
-            
+            case 0x03:
+                self.INX_B()
+                return
 
 #--------------------------------------------------#
 
