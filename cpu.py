@@ -64,26 +64,34 @@ class Cpu:
     def LXI_B(self):
         data_16 = self.fetch_two_bytes()
         self.set_register_BC(data_16)
-        self.PC += 1
         return
 
     def LXI_D(self):
         data_16 = self.fetch_two_bytes()
         self.set_register_DE(data_16)
-        self.PC += 1
         return
 
     def LXI_H(self):
         data_16 = self.fetch_two_bytes()
         self.set_register_HL(data_16)
-        self.PC += 1
         return
 
     def LXI_SP(self):
         data_16 = self.fetch_two_bytes()
         self.set_register_SP(data_16)
-        self.PC += 1                    #@@@ check whether I did the addition of the PC properly.
         return
+
+    def STAX_B(self):
+        addr = self.BC
+        self.memory[addr] = self.A & 0xFF     
+        return                                #@@@ refactor this?
+
+    def STAX_B(self):
+        addr = self.BC
+        self.memory[addr] = self.A & 0xFF    
+        return
+    
+
     #--------------------------------------------------#
 
     #MEMORY IS NOT RESET FOR TESTING PURPOSES
@@ -113,6 +121,11 @@ class Cpu:
                 return
             case 0x01:
                 self.LXI_B()
+                return
+            case 0x02:
+                self.STAX_B()
+                return
+            
 
 #--------------------------------------------------#
 
