@@ -154,3 +154,6 @@ data = cpu.fetch_two_bytes()
 assert data == 0xc5f5
 cpu.test_reset()
 
+# main loop
+#--------------------------------------------------#
+
