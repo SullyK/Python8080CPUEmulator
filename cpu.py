@@ -94,6 +94,14 @@ class Cpu:
     def INX_B(self):
         self.BC = (self.BC + 1) & 0xFF
         return 
+
+    def INR_B(self):
+        self.B += 1 & 0xFF
+        self.Z = True if self.Z == False else False
+        self.S = True if self.B & 0x80 else False # We need to get the first bit (this one-->(1)0000000) 
+                                                  # if it isn't greater than 128 it is 0, else its 128
+        self.P 
+        self.AC
     
 
     #--------------------------------------------------#
@@ -118,8 +126,7 @@ class Cpu:
         self.AC = False
         self.PC = 0
   
-    def read_instruction(self): 
-        op_code = self.memory[self.PC]
+    def read_instruction(self, op_code): 
         match op_code:
             case 0x00:
                 return
@@ -132,34 +139,44 @@ class Cpu:
             case 0x03:
                 self.INX_B()
                 return
+            case 0x04:
+                self.INR_B()
+                return
 
 #--------------------------------------------------#
 
-# testing
+# init the Cpu() and open spaceinvaders
 cpu = Cpu()
-# step 1. load spaceinvaders into memory
 with open("invaders", "rb") as b_file:
     cpu.memory = bytearray(b_file.read())
-
-assert cpu.memory[0] == 0x00
-assert cpu.memory[9] == 0xc5
-assert cpu.memory[len(cpu.memory)-1] == 0x00
-
-data = cpu.fetch_byte()
-assert data == 0x00
-
-cpu.test_reset()
-
-data = cpu.fetch_two_bytes()
-assert data == 0x00
-data = cpu.fetch_two_bytes()
-data = cpu.fetch_two_bytes()
-assert data == 0x18d4
-data = cpu.fetch_two_bytes()
-data = cpu.fetch_two_bytes()
-assert data == 0xc5f5
-cpu.test_reset()
+#--------------------------------------------------#
 
 # main loop
 #--------------------------------------------------#
 
+while True:
+    data = cpu.fetch_byte()
+    cpu.read_instruction(data)
+
+# testing
+
+# assert cpu.memory[0] == 0x00
+# assert cpu.memory[9] == 0xc5
+# assert cpu.memory[len(cpu.memory)-1] == 0x00
+
+# data = cpu.fetch_byte()
+# assert data == 0x00
+
+# cpu.test_reset()
+
+# data = cpu.fetch_two_bytes()
+# assert data == 0x00
+# data = cpu.fetch_two_bytes()
+# data = cpu.fetch_two_bytes()
+# assert data == 0x18d4
+# data = cpu.fetch_two_bytes()
+# data = cpu.fetch_two_bytes()
+# assert data == 0xc5f5
+# cpu.test_reset()
+
+    
