@@ -1,3 +1,9 @@
+def add_bits(hex):
+    total = 0
+    for i in range(8):
+        total += ((hex >> i)& 1)
+    return total
+    
 class Cpu:
     def __init__(self):
         """create the registers"""
@@ -86,24 +92,21 @@ class Cpu:
         self.memory[addr] = self.A & 0xFF     
         return                                #@@@ refactor this?
 
-    def STAX_B(self):
-        addr = self.BC
-        self.memory[addr] = self.A & 0xFF    
-        return
-
     def INX_B(self):
-        self.BC = (self.BC + 1) & 0xFF
+        self.BC = (self.BC + 1) & 0xFF #no carry over? what happens when over 255.
         return 
 
     def INR_B(self):
-        self.B += 1 & 0xFF
-        self.Z = True if self.Z == False else False
-        self.S = True if self.B & 0x80 else False # We need to get the first bit (this one-->(1)0000000) 
-                                                  # if it isn't greater than 128 it is 0, else its 128
-        self.P 
-        self.AC
+        self.B += 1 & 0xFF #The value of register b is incremented by one.
+        #all flags are affected besides CY.
+        self.Z = True if self.B == 0 else False
+        # We need to get the first bit (this one-->(1)0000000)
+        # if it isn't greater than 128 it is 0, else its 128 (which isn't 0, hence setting flag)
+        self.S = True if self.B & 0x80 else False 
+        self.P = True if add_bits(self.B) % 2 == 0 else False
+        self.AC = True if self.B - 1 == 15 else False
     
-
+    
     #--------------------------------------------------#
 
     #MEMORY IS NOT RESET FOR TESTING PURPOSES
@@ -178,5 +181,4 @@ while True:
 # data = cpu.fetch_two_bytes()
 # assert data == 0xc5f5
 # cpu.test_reset()
-
     
