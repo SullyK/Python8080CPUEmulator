@@ -146,7 +146,7 @@ class Cpu:
         MSB = self.CY
         self.CY = self.get_LSB(A)
         A = ((A >> 1) & 0xFF)
-        A = A | (self.CY << 7)
+        A = A | (MSB << 7)
         
 
     #--------------------------------------------------#
