@@ -104,9 +104,51 @@ class Cpu:
         # if it isn't greater than 128 it is 0, else its 128 (which isn't 0, hence setting flag)
         self.S = True if self.B & 0x80 else False 
         self.P = True if add_bits(self.B) % 2 == 0 else False
-        self.AC = True if self.B - 1 == 15 else False
+        self.AC = 0 #@@@come back and complete
     
+    def DCR_B(self):
+        self.B -= 1 & 0xFF
+        self.Z = True if self.B == 0 else False
+        self.S = True if self.B & 0x80 else False
+        self.P = True if add_bits(self.B) % 2 == 0 else False
+        self.AC = 0 #@@@come back and complete
+
+    def MVI_B_d8(self):
+        self.B = self.fetch_byte()
+
+    def get_MSB(self,A):
+        bits = (A & (1 << 7))  #1 << 7 is the same as 1000 0000
+        return ((bits >> 7))
+
+    def get_LSB(self,A):
+        bit = (A & 1)
+        return bit
+
+    def RLC(self,A):
+        self.CY = self.get_MSB(A) # store the MSB
+        A = (( A << 1) & 0xFF) #shift Left
+        # if CY == 1:
+            # A = A | 0b0000001 -- not necessary below is nicer and same
+        A = A | self.CY #if CY is 1, then 1 appended, if 0, nothing happens
+        
+    def RAL(self,A):
+        LSB = self.CY
+        self.CY = self.get_MSB(A)
+        A = ((A << 1) & 0xFF) # shifted left
+        A = A | LSB
     
+    def RRC(self,A):
+        self.CY = self.get_LSB(A)
+        A = ((A >> 1) & 0xFF)
+        A = A | (self.CY << 7)
+        
+    def RAR(self,A):
+        MSB = self.CY
+        self.CY = self.get_LSB(A)
+        A = ((A >> 1) & 0xFF)
+        A = A | (self.CY << 7)
+        
+
     #--------------------------------------------------#
 
     #MEMORY IS NOT RESET FOR TESTING PURPOSES
@@ -181,4 +223,3 @@ while True:
 # data = cpu.fetch_two_bytes()
 # assert data == 0xc5f5
 # cpu.test_reset()
-    
