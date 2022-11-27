@@ -147,7 +147,17 @@ class Cpu:
         self.CY = self.get_LSB(A)
         A = ((A >> 1) & 0xFF)
         A = A | (MSB << 7)
+
+    def DAA(self):
+        value = self.A & 15
+        if value > 9 or self.AC == True:
+            self.AC += 6
         
+        mask = 0b11110000
+        value = (self.A & mask)
+        value = value >> 4 #shift the back to the bottom 4 bits
+        if value > 9 or self.CY == 1:
+            self.A += (6 << 4) #continue from here                
 
     #--------------------------------------------------#
 
