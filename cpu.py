@@ -184,12 +184,42 @@ class Cpu:
     def PUSH_B(self):
         mask = 0xFF #255 same as 0b0000000011111111 same as 0b11111111
         high = self.BC & mask
-        low = self.BC >> 7
+        low = self.BC >> 8
         self.memory[self.SP - 1] = high
         self.memory[self.SP - 2] = low
         self.SP -= 2
-        return  
+        return
 
+    def PUSH_D(self):
+        mask = 0xFF
+        self.memory[self.SP - 1] = self.DE & mask
+        self.memory[self.SP - 2] = self.DE >> 8
+        self.SP -= 2
+        return
+
+    def PUSH_H(self):
+        mask = 0xFF
+        self.memory[self.SP - 1] = self.HL & mask
+        self.memory[self.SP - 2] = self.HL >> 8
+        self.SP -= 2
+        return
+    #--------------------------------------------------#
+    #Arithmetic Group:
+
+    def ADC_H(self):
+        self.A = self.A + self.H + self.CY
+        # I Should make a function that handless this stuff for me cause too much repition
+        #@@@TODO: come back and continue from here tomorrow
+        self.Z = True if self.A == 0 else False
+        self.S = True if self.A & 0x80 else False
+        self.P = True if add_bits(self.A) % 2 == 0 else False
+        self.AC = 0 #@@@come back and complete
+
+
+    #--------------------------------------------------#
+    # Data Transfer Group:
+
+    # TODO: WORK FROM HERE TOMORROW
     #--------------------------------------------------#
 
     #MEMORY IS NOT RESET FOR TESTING PURPOSES
@@ -232,6 +262,14 @@ class Cpu:
                 self.JMP()
             case 0xf5:
                 self.PUSH_PSW()
+            case 0xc5:
+                self.PUSH_B()
+            case 0xd5:
+                self.PUSH_D()
+            case 0xe5:
+                self.PUSH_H()
+            case 0x8c:
+                self.ADC_H()
 
 #--------------------------------------------------#
 
