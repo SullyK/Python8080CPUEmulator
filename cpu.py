@@ -113,8 +113,6 @@ class Cpu:
         self.P = True if add_bits(self.B) % 2 == 0 else False
         self.AC = 0 #@@@come back and complete
 
-    def MVI_B_d8(self):
-        self.B = self.fetch_byte()
 
     def get_MSB(self):
         bits = (self.A & (1 << 7))  #1 << 7 is the same as 1000 0000
@@ -205,22 +203,50 @@ class Cpu:
         return
     #--------------------------------------------------#
     #Arithmetic Group:
+    def ADD_B(self):
+        self.A = self.A + self.B
+       
+        self.Z = True if self.A == 0 else False
+        self.S = True if self.A & 0x80 else False #reminder - as long as greater 0, all good
+        self.P = True if add_bits(self.A) % 2 == 0 else False
+        self.AC = 0 #@@@come back and complete
+        return
 
     def ADC_H(self):
         self.A = self.A + self.H + self.CY
-        # I Should make a function that handless this stuff for me cause too much repition
-        #@@@TODO: come back and continue from here tomorrow
+        # I Should make a function that handless this stuff for me cause too much repition 
+        # @@@TODO: Check this correct below
         self.Z = True if self.A == 0 else False
         self.S = True if self.A & 0x80 else False
         self.P = True if add_bits(self.A) % 2 == 0 else False
-        self.AC = 0 #@@@come back and complete
+        #@@@TODO:CARRY and AUX CARRY
 
-
+    def DCR_M(self):
+        self.memory[self.HL] -= 1
+        #@@@TODO: FLAGS TOMORROWWWWWWWWWWWW
     #--------------------------------------------------#
     # Data Transfer Group:
+    
+    # @@@TODO: Check if this is right... too simple
+    def MVI_B_d8(self):
+        self.B = self.fetch_byte()
+        return
 
-    # TODO: WORK FROM HERE TOMORROW
-    #--------------------------------------------------#
+    def MVI_A_d8(self):
+        self.A = self.fetch_byte()
+        return
+
+    # @@@TODO: Make a general function that does it for all above,
+    # instead of doing it seperately 
+
+    def STA(self):
+        self.memory[self.fetch_two_bytes()] = self.A
+        return
+
+    def MOV_M_D():
+        self.memory[self.HL] = self.D
+        return
+#--------------------------------------------------#
 
     #MEMORY IS NOT RESET FOR TESTING PURPOSES
     def test_reset(self):
@@ -229,7 +255,7 @@ class Cpu:
         self.C = 0
         self.D = 0
         self.E = 0
-        self.H = 0 
+        self.H = 0
         self.L = 0 
         self.BC = 0
         self.DE = 0
@@ -270,7 +296,20 @@ class Cpu:
                 self.PUSH_H()
             case 0x8c:
                 self.ADC_H()
-
+            case 0x3e:
+                self.MVI_A_d8()
+            case 0x32:
+                self.STA()
+            case 0x72:
+                self.MOVE_M_D()
+            case 0x21:
+                self.LXI_H()
+            case 0xc8:
+                # NEED TO IMPLEMENT RNZ? No clue what this is yet...
+            case 0x20:
+                # Similar to above
+            case 0x35:
+                self.DCR_M()
 #--------------------------------------------------#
 
 # init the Cpu() and open spaceinvaders
