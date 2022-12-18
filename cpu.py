@@ -162,7 +162,8 @@ class Cpu:
     
     # Branch Group
     def JMP(self):
-        self.PC = self.fetch_two_bytes
+        self.PC = self.fetch_two_bytes()
+        print("JUMPING TO " + str(hex(self.PC)))
         return
     
     
@@ -223,7 +224,11 @@ class Cpu:
 
     def DCR_M(self):
         self.memory[self.HL] -= 1
-        #@@@TODO: FLAGS TOMORROWWWWWWWWWWWW
+        self.Z = True if self.HL == 0 else False
+        self.S = True if self.HL & 0x80 else False
+        self.P = True if add_bits(self.HL) % 2 == 0 else False
+        #@@@TODO: come back to do AC flag.
+     
     #--------------------------------------------------#
     # Data Transfer Group:
     
@@ -243,9 +248,10 @@ class Cpu:
         self.memory[self.fetch_two_bytes()] = self.A
         return
 
-    def MOV_M_D():
-        self.memory[self.HL] = self.D
-        return
+    # def MOV_M_D():
+    #     self.memory[self.HL] = self.D
+    #     return
+    # @@@TODO: come back to this as I commented it out do to issues.s
 #--------------------------------------------------#
 
     #MEMORY IS NOT RESET FOR TESTING PURPOSES
@@ -269,8 +275,13 @@ class Cpu:
         self.PC = 0
   
     def read_instruction(self, op_code): 
+        print("=======================")
+        print("Current opcode:")
+        print(hex(op_code))
+
         match op_code:
             case 0x00:
+                # print("Running NOP")
                 return
             case 0x01:
                 self.LXI_B()
@@ -305,11 +316,20 @@ class Cpu:
             case 0x21:
                 self.LXI_H()
             case 0xc8:
+                return
                 # NEED TO IMPLEMENT RNZ? No clue what this is yet...
             case 0x20:
+                return
                 # Similar to above
             case 0x35:
                 self.DCR_M()
+            
+            
+            case other:
+                # print("NOT IMPLEMENTED")
+                # print(hex(other))
+                return
+
 #--------------------------------------------------#
 
 # init the Cpu() and open spaceinvaders
@@ -323,6 +343,8 @@ with open("invaders", "rb") as b_file:
 
 while True:
     data = cpu.fetch_byte()
+    print("byte about to go in")
+    print(hex(data))
     cpu.read_instruction(data)
 
 # testing
