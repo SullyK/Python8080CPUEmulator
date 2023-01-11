@@ -43,7 +43,7 @@ class Cpu:
         self.PC += 2 
         data = high_byte << 8 | low_byte  #(high_byte << 8 + low_byte) works too
         # print(hex(data)) #debugging
-        return data
+        return data    
 
     #--------------------------------------------------#
 
@@ -166,6 +166,12 @@ class Cpu:
         print("JUMPING TO " + str(hex(self.PC)))
         return
     
+    def CALL(self):
+        data_16 = self.fetch_two_bytes()
+        self.memory[self.SP - 1] = data_16 >> 8
+        self.memory[self.SP - 2] = data_16 & 0xFF
+        self.SP =- 2
+        self.PC = data_16
     
     #--------------------------------------------------#
     # Stack, I/O, and Machine Control Group:
